@@ -1,9 +1,6 @@
 # Kubesec Action
 
-> [GitHub Action](https://github.com/features/actions) for [kubesec](https://github.com/controlplaneio/kubesec)
-
-[![GitHub Release][release_badge]][release]
-[![GitHub Marketplace][marketplace_badge]][marketplace]
+> [GitHub Action](https://github.com/features/actions) for [kubesec](https://github.com/controlplaneio/kubesec) fork of [https://github.com/controlplaneio/kubesec-action]
 
 ![kubesec_logo](images/kubesec_logo.svg)
 
@@ -31,7 +28,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
 
       - name: Run kubesec scanner
         uses: bsanchezmir/kubesec-action@latest
@@ -44,7 +41,7 @@ jobs:
 If you have [GitHub code scanning][code_scanning] available you can use kubesec as a scanning tool as follows:
 
 ```yaml
-name: lint
+name: kubesec
 on:
   push:
     branches:
@@ -56,7 +53,10 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
+
+      - name: Get sarif.tpl
+        run: wget https://raw.githubusercontent.com/bsanchezmir/kubesec-action/main/sarif.tpl
 
       - name: Run kubesec scanner
         uses: bsanchezmir/kubesec-action@latest
@@ -64,11 +64,11 @@ jobs:
           input: file.yaml
           exit-code: "0"
           format: template
-          template: template/sarif.tpl
+          template: ./sarif.tpl
           output: kubesec-results.sarif
 
       - name: Upload Kubesec scan results to GitHub Security tab
-        uses: github/codeql-action/upload-sarif@v1
+        uses: github/codeql-action/upload-sarif@v2
         with:
           sarif_file: kubesec-results.sarif
 ```
@@ -91,8 +91,8 @@ on:
     - cron: '34 10 * * 3'
 
 jobs:
-  prepare:
-    runs-on: ubuntu-latest
+  findyamls:
+    runs-on: ubuntu-20.04
     outputs:
       matrix: ${{ steps.set-matrix.outputs.matrix }}
     steps:
@@ -109,13 +109,12 @@ jobs:
             fi
           done
           echo "FILE_MATRIX={\"file\": [$k8s_files]}" >> $GITHUB_ENV 
-
       - name: Set matrix
         run: echo "matrix=$FILE_MATRIX" >> $GITHUB_OUTPUT
         id: set-matrix
 
-  scan:
-    needs: prepare
+  kubesec:
+    needs: findyamls
     runs-on: ubuntu-latest
     permissions:
       security-events: write
@@ -123,40 +122,42 @@ jobs:
       contents: read
     strategy:
       matrix:
-        file: ${{fromJson(needs.prepare.outputs.matrix).file }}
+        file: ${{fromJson(needs.findyamls.outputs.matrix).file }}
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
 
+      - name: Get sarif.tpl
+        run: wget https://raw.githubusercontent.com/bsanchezmir/kubesec-action/main/sarif.tpl
+
       - name: Run kubesec scanner
         uses: bsanchezmir/kubesec-action@latest
         with:
-          input: ${{ matrix.file }}
           exit-code: "0"
+          template: ./sarif.tpl
           format: template
-          template: template/sarif.tpl
           output:  ${{ matrix.file }}.sarif
-
-      - name: Print kubesec-results.sarif
-        run: cat  ${{ matrix.file }}.sarif
-          
+          filename: ${{ matrix.file }}
+  
       - name: Upload Kubesec scan results to GitHub Security tab
         uses: github/codeql-action/upload-sarif@v2
         with:
-          sarif_file:  ${{ matrix.file }}.sarif
-
+          sarif_file:  ${{ matrix.file }}.sarif 
 ```
 
-## Customising
+## customizing
 
 ### inputs
 
 Following inputs can be used as `step.with` keys:
 
+The sarif template is being pulled from  `https://raw.githubusercontent.com/bsanchezmir/kubesec-action/main/sarif.tpl`
+
+
 | Name        | Type   | Default | Description                              |
 | ----------- | ------ | ------- | ---------------------------------------- |
-| `input`     | String |         | File to scan                             |
+| `filename`  | String |         | File to scan                             |
 | `format`    | String | `json`  | Output format (`json`, `template`)       |
-| `template`  | String |         | Output template (`/templates/sarif.tpl`) |
+| `template`  | String |         | Output template (`sarif.tpl`) |
 | `output`    | String |         | Save results to a file                   |
 | `exit-code` | String | `"2"`   | Override the exit-code                   |
