@@ -5,7 +5,7 @@ branding:
   icon: shield
   color: white
 inputs:
-  input:
+  filename:
     description: The file to scan
     required: true
     default: ""
@@ -34,4 +34,4 @@ runs:
     - "--template=${{ inputs.template }}"
     - "--output=${{ inputs.output }}"
     - "--exit-code=${{ inputs.exit-code }}"
-    - ${{ inputs.input }}
+    - "${{ inputs.filename }}"
