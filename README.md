@@ -33,7 +33,7 @@ jobs:
       - name: Run kubesec scanner
         uses: bsanchezmir/kubesec-action@latest
         with:
-          input: file.yaml
+          filename: file.yaml
 ```
 
 ### Using kubesec with GitHub Code Scanning
@@ -61,7 +61,7 @@ jobs:
       - name: Run kubesec scanner
         uses: bsanchezmir/kubesec-action@latest
         with:
-          input: file.yaml
+          filename: file.yaml
           exit-code: "0"
           format: template
           template: ./sarif.tpl
