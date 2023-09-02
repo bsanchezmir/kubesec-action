@@ -30,8 +30,8 @@ runs:
   image: ./Dockerfile
   args:
     - scan
-    - "--format=${{ inputs.format }}"
-    - "--template=${{ inputs.template }}"
-    - "--output=${{ inputs.output }}"
+    - "-f ${{ inputs.format }}"
+    - "-t ${{ inputs.template }}"
+    - "-o ${{ inputs.output }}"
     - "--exit-code=${{ inputs.exit-code }}"
     - ${{ inputs.filename }}
