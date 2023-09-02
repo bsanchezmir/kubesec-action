@@ -1,4 +1,4 @@
-name: ControlPlane Kubesec
+name: Kubesec scanner for mutiple yaml/yml files
 description: Scans k8s yaml with kubesec
 author: ControlPlane
 branding:
