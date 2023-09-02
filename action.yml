@@ -12,7 +12,7 @@ inputs:
   format:
     description: "Set output format (json, template)"
     required: false
-    default: json
+    default: ""
   template:
     description: Use an existing template for rendering output (templates/sarif.tpl)
     required: false
