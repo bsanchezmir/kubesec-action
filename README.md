@@ -34,7 +34,7 @@ jobs:
         uses: actions/checkout@v2
 
       - name: Run kubesec scanner
-        uses: bsanchezmir/kubesec-action@main
+        uses: bsanchezmir/kubesec-action@latest
         with:
           input: file.yaml
 ```
@@ -59,7 +59,7 @@ jobs:
         uses: actions/checkout@v2
 
       - name: Run kubesec scanner
-        uses: bsanchezmir/kubesec-action@main
+        uses: bsanchezmir/kubesec-action@latest
         with:
           input: file.yaml
           exit-code: "0"
@@ -129,7 +129,7 @@ jobs:
         uses: actions/checkout@v3
 
       - name: Run kubesec scanner
-        uses: bsanchezmir/kubesec-action@main
+        uses: bsanchezmir/kubesec-action@latest
         with:
           input: ${{ matrix.file }}
           exit-code: "0"
