@@ -20,7 +20,7 @@ name: lint
 on:
   push:
     branches:
-      - master
+      - main
   pull_request:
 jobs:
   lint:
@@ -45,7 +45,7 @@ name: kubesec
 on:
   push:
     branches:
-      - master
+      - main
   pull_request:
 jobs:
   lint:
