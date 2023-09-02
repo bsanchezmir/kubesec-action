@@ -34,4 +34,4 @@ runs:
     - "--template=${{ inputs.template }}"
     - "--output=${{ inputs.output }}"
     - "--exit-code=${{ inputs.exit-code }}"
-    - "${{ inputs.filename }}"
+    - ${{ inputs.filename }}
