@@ -14,7 +14,7 @@ inputs:
     required: false
     default: ""
   template:
-    description: Use an existing template for rendering output (templates/sarif.tpl)
+    description: Use an existing sarif template
     required: false
     default: ""
   output:
@@ -30,8 +30,8 @@ runs:
   image: ./Dockerfile
   args:
     - scan
-    - "-f ${{ inputs.format }}"
-    - "-t ${{ inputs.template }}"
-    - "-o ${{ inputs.output }}"
+    - "--format=${{ inputs.format }}"
+    - "--template=${{ inputs.template }}"
+    - "--output=${{ inputs.output }}"
     - "--exit-code=${{ inputs.exit-code }}"
     - ${{ inputs.filename }}
