@@ -1,3 +1,3 @@
-FROM kubesec/kubesec:2.11.0
+FROM kubesec/kubesec:v2
 # Set user id to match the user id of /github/home
 USER 1001
